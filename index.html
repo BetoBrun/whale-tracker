@@ -4,11 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Whale Tracker | Hyperliquid</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -17,329 +13,164 @@
             min-height: 100vh;
             color: #e0e0e0;
         }
-        .sidebar {
-            width: 280px;
-            background: #0f0f1a;
-            border-right: 1px solid #2a2a3a;
-            min-height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-        }
-        .main-content {
-            margin-left: 280px;
-            padding: 24px;
-        }
-        .stat-card {
-            background: #1e1e30;
-            border: 1px solid #2a2a3a;
-            border-radius: 12px;
-            padding: 20px;
-        }
-        .table-row {
-            border-bottom: 1px solid #2a2a3a;
-            transition: background 0.2s;
-        }
-        .table-row:hover {
-            background: #252540;
-        }
-        .signal-long {
-            background: rgba(0, 212, 170, 0.2);
-            color: #00d4aa;
-        }
-        .signal-short {
-            background: rgba(255, 71, 87, 0.2);
-            color: #ff4757;
-        }
-        .pro-badge {
-            background: linear-gradient(90deg, #f59e0b, #fbbf24);
-            color: black;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-        .filter-btn {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .filter-btn.active {
-            background: #f59e0b;
-            color: black;
-        }
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            color: #888;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-        .nav-item:hover {
-            background: #1e1e30;
-            color: white;
-        }
-        .nav-item.active {
-            background: #1e1e30;
-            color: white;
-        }
-        #chart-container {
-            height: 400px;
-        }
     </style>
 </head>
 <body>
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
-
-        const mockWhales = [
-            { rank: 1, address: '0x742d35Cc6634C0532925a3b844Bc9e7595f', label: 'Alpha', pnl: 1250000, pnlPercent: 45.2, volume: 85000000, position: 'long', lastActive: '2 min' },
-            { rank: 2, address: '0x9B3a54D092a4f22d6b3A7a1e7d2F8C5A3B2D1E0F', pnl: 890000, pnlPercent: 28.5, volume: 62000000, position: 'long', lastActive: '5 min' },
-            { rank: 3, address: '0x1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p', label: 'King', pnl: -450000, pnlPercent: -12.3, volume: 45000000, position: 'short', lastActive: '10 min' },
-            { rank: 4, address: '0x5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b', pnl: 720000, pnlPercent: 18.7, volume: 38000000, position: 'long', lastActive: '15 min' },
-            { rank: 5, address: '0x4d3c2b1a0f9e8d7c6b5a4f3e2d1c0b9a', pnl: 560000, pnlPercent: 15.2, volume: 32000000, position: 'long', lastActive: '20 min' },
-            { rank: 6, address: '0x8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c', pnl: -320000, pnlPercent: -8.5, volume: 28000000, position: 'short', lastActive: '25 min' },
-            { rank: 7, address: '0x2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d', label: 'Whale', pnl: 410000, pnlPercent: 11.8, volume: 24000000, position: 'long', lastActive: '30 min' },
-            { rank: 8, address: '0x9c8b7a6f5e4d3c2b1a0f9e8d7c6b5a4', pnl: 280000, pnlPercent: 7.2, volume: 19000000, position: 'neutral', lastActive: '35 min' },
-            { rank: 9, address: '0x3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c', pnl: -180000, pnlPercent: -5.1, volume: 15000000, position: 'short', lastActive: '40 min' },
-            { rank: 10, address: '0x6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d', pnl: 150000, pnlPercent: 3.8, volume: 12000000, position: 'long', lastActive: '45 min' },
-        ];
-
-        const navItems = [
-            { icon: '📊', label: 'Pools', href: '#' },
-            { icon: '💰', label: 'Earn', href: '#' },
-            { icon: '🎓', label: 'Learn', href: '#' },
-            { icon: '🧮', label: 'Lend Simulator', href: '#' },
-            { icon: '🧮', label: 'Liquidity Calc', href: '#' },
-            { icon: '🏛️', label: 'Stake', href: '#' },
-            { icon: '🐋', label: 'Whale Tracker', href: '#', pro: true },
-            { icon: '₿', label: 'Bitcoin Lab', href: '#', pro: true },
-        ];
-
-        function App() {
-            const [filter, setFilter] = useState('all');
-            const [timeframe, setTimeframe] = useState('4H');
-            const chartContainerRef = useRef(null);
-
-            const filteredWhales = mockWhales.filter(w => 
-                filter === 'all' || w.position === filter
-            );
-
-            useEffect(() => {
-                if (!chartContainerRef.current) return;
-                
-                const chart = LightweightCharts.createChart(chartContainerRef.current, {
-                    layout: { background: { color: '#1e1e30' }, textColor: '#888' },
-                    grid: { vertLines: { color: '#2a2a3a' }, horzLines: { color: '#2a2a3a' } },
-                    width: chartContainerRef.current.clientWidth,
-                    height: 400,
-                });
-
-                const candlestickSeries = chart.addCandlestickSeries({
-                    upColor: '#00d4aa',
-                    downColor: '#ff4757',
-                    borderUpColor: '#00d4aa',
-                    borderDownColor: '#ff4757',
-                });
-
-                candlestickSeries.setData([
-                    { time: '2024-01-01', open: 42000, high: 43500, low: 41800, close: 43200 },
-                    { time: '2024-01-02', open: 43200, high: 44500, low: 42800, close: 44100 },
-                    { time: '2024-01-03', open: 44100, high: 45200, low: 43800, close: 44500 },
-                    { time: '2024-01-04', open: 44500, high: 46800, low: 44200, close: 46500 },
-                    { time: '2024-01-05', open: 46500, high: 47500, low: 45800, close: 47200 },
-                    { time: '2024-01-06', open: 47200, high: 48500, low: 46800, close: 48200 },
-                    { time: '2024-01-07', open: 48200, high: 49500, low: 47800, close: 49000 },
-                    { time: '2024-01-08', open: 49000, high: 50200, low: 48500, close: 49800 },
-                    { time: '2024-01-09', open: 49800, high: 51000, low: 49200, close: 50500 },
-                    { time: '2024-01-10', open: 50500, high: 51800, low: 50000, close: 51200 },
-                ]);
-
-                chart.timeScale().fitContent();
-
-                const handleResize = () => {
-                    if (chartContainerRef.current) {
-                        chart.applyOptions({ width: chartContainerRef.current.clientWidth });
-                    }
-                };
-                window.addEventListener('resize', handleResize);
-                return () => { window.removeEventListener('resize', handleResize); chart.remove(); };
-            }, []);
-
-            return (
-                <div className="flex">
-                    {/* Sidebar */}
-                    <div className="sidebar">
-                        <div className="p-4 border-b border-gray-800">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 flex items-center justify-center">
-                                    <span className="text-xl">🐋</span>
-                                </div>
-                                <div>
-                                    <div className="font-bold text-white">Whale Tracker</div>
-                                    <div className="text-xs text-gray-500">Hyperliquid Analytics</div>
-                                </div>
-                            </div>
-                        </div>
-                        <nav className="p-4">
-                            <div className="text-xs text-gray-500 mb-2 px-2 uppercase tracking-wider">Navigation</div>
-                            <ul className="space-y-1">
-                                {navItems.map((item, i) => (
-                                    <li key={i}>
-                                        <a href={item.href} className={`nav-item ${i === 5 ? 'active' : ''}`}>
-                                            <span>{item.icon}</span>
-                                            <span className="text-sm">{item.label}</span>
-                                            {item.pro && <span className="pro-badge ml-auto">PRO</span>}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </nav>
-                        <div className="p-4 border-t border-gray-800">
-                            <button className="w-full bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-semibold py-2 px-4 rounded-lg">
-                                Connect Wallet
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Main Content */}
-                    <div className="main-content flex-1">
-                        <header className="flex items-center gap-2 mb-6">
-                            <h1 className="text-2xl font-bold text-white">Whale Tracker</h1>
-                            <span className="pro-badge">PRO</span>
-                        </header>
-
-                        {/* Stats */}
-                        <div className="grid grid-cols-4 gap-4 mb-6">
-                            <div className="stat-card">
-                                <div className="text-gray-500 text-sm mb-1">Total P&L</div>
-                                <div className="text-2xl font-bold text-white">$4.2M</div>
-                                <div className="text-green-400 text-sm mt-1">+12.5% (24h)</div>
-                            </div>
-                            <div className="stat-card">
-                                <div className="text-gray-500 text-sm mb-1">Active Whales</div>
-                                <div className="text-2xl font-bold text-white">156</div>
-                                <div className="text-green-400 text-sm mt-1">+8 new today</div>
-                            </div>
-                            <div className="stat-card">
-                                <div className="text-gray-500 text-sm mb-1">Total Volume</div>
-                                <div className="text-2xl font-bold text-white">$842M</div>
-                                <div className="text-green-400 text-sm mt-1">+5.2% (24h)</div>
-                            </div>
-                            <div className="stat-card">
-                                <div className="text-gray-500 text-sm mb-1">Win Rate</div>
-                                <div className="text-2xl font-bold text-white">68.5%</div>
-                                <div className="text-red-400 text-sm mt-1">-2.1% vs last week</div>
-                            </div>
-                        </div>
-
-                        {/* Chart */}
-                        <div className="stat-card mb-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <h2 className="text-lg font-semibold text-white">BTC/USDD Price</h2>
-                                <div className="flex gap-2">
-                                    {['1H', '4H', '1D'].map(tf => (
-                                        <button 
-                                            key={tf}
-                                            onClick={() => setTimeframe(tf)}
-                                            className={`px-3 py-1 rounded text-sm ${timeframe === tf ? 'bg-amber-500 text-black' : 'bg-gray-700 text-gray-400'}`}
-                                        >
-                                            {tf}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                            <div id="chart-container" ref={chartContainerRef}></div>
-                        </div>
-
-                        {/* Table */}
-                        <div className="stat-card">
-                            <div className="flex items-center justify-between mb-4 p-4 border-b border-gray-800">
-                                <h2 className="text-lg font-semibold text-white">Top Whales</h2>
-                                <div className="flex gap-2">
-                                    {['All', 'Long', 'Short'].map(f => (
-                                        <button 
-                                            key={f}
-                                            onClick={() => setFilter(f.toLowerCase())}
-                                            className={`filter-btn ${filter === f.toLowerCase() ? 'active' : 'bg-gray-700 text-gray-400'}`}
-                                        >
-                                            {f}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                            <table className="w-full">
-                                <thead>
-                                    <tr className="text-left text-gray-500 text-sm border-b border-gray-800">
-                                        <th className="p-4 font-medium">#</th>
-                                        <th className="p-4 font-medium">Wallet</th>
-                                        <th className="p-4 font-medium">Position</th>
-                                        <th className="p-4 font-medium">P&L</th>
-                                        <th className="p-4 font-medium">P&L %</th>
-                                        <th className="p-4 font-medium">Volume (24h)</th>
-                                        <th className="p-4 font-medium">Last Active</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredWhales.map(whale => (
-                                        <tr key={whale.rank} className="table-row">
-                                            <td className="p-4 text-gray-400">#{whale.rank}</td>
-                                            <td className="p-4">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-mono text-gray-300 text-sm">
-                                                        {whale.address.slice(0, 10)}...{whale.address.slice(-6)}
-                                                    </span>
-                                                    {whale.label && (
-                                                        <span className="text-xs bg-gray-700 text-amber-400 px-2 py-0.5 rounded">
-                                                            {whale.label}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </td>
-                                            <td className="p-4">
-                                                <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                                    whale.position === 'long' ? 'signal-long' : 
-                                                    whale.position === 'short' ? 'signal-short' : 'bg-gray-700 text-gray-400'
-                                                }`}>
-                                                    {whale.position.toUpperCase()}
-                                                </span>
-                                            </td>
-                                            <td className="p-4">
-                                                <span className={whale.pnl >= 0 ? 'text-green-400' : 'text-red-400'}>
-                                                    ${(whale.pnl/1000000).toFixed(2)}M
-                                                </span>
-                                            </td>
-                                            <td className="p-4">
-                                                <span className={whale.pnlPercent >= 0 ? 'text-green-400' : 'text-red-400'}>
-                                                    {whale.pnlPercent >= 0 ? '+' : ''}{whale.pnlPercent}%
-                                                </span>
-                                            </td>
-                                            <td className="p-4 text-gray-300">
-                                                ${(whale.volume/1000000).toFixed(1)}M
-                                            </td>
-                                            <td className="p-4 text-gray-400 text-sm">{whale.lastActive}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <footer className="mt-8 text-center text-gray-500 text-sm">
-                            <p>Data sourced from Hyperliquid • Last updated: just now</p>
-                        </footer>
-                    </div>
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 w-64 bg-[#0f0f1a] border-r border-[#2a2a3a] min-h-screen">
+        <div class="p-4 border-b border-[#2a2a3a]">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 flex items-center justify-center">
+                    <span class="text-xl">🐋</span>
                 </div>
-            );
-        }
+                <div>
+                    <div class="font-bold text-white">Whale Tracker</div>
+                    <div class="text-xs text-gray-500">Hyperliquid Analytics</div>
+                </div>
+            </div>
+        </div>
+        <nav class="p-4">
+            <div class="text-xs text-gray-500 mb-2 px-2 uppercase tracking-wider">Navigation</div>
+            <ul class="space-y-1">
+                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1e1e30] hover:text-white">📊 Pools</a></li>
+                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1e1e30] hover:text-white">💰 Earn</a></li>
+                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1e1e30] hover:text-white">🎓 Learn</a></li>
+                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1e1e30] hover:text-white">🧮 Lend Simulator</a></li>
+                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1e1e30] hover:text-white">🧮 Liquidity Calc</a></li>
+                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1e1e30] hover:text-white">🏛️ Stake</a></li>
+                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#1e1e30] text-white">🐋 Whale Tracker</a></li>
+                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1e1e30] hover:text-white">₿ Bitcoin Lab</a></li>
+            </ul>
+        </nav>
+        <div class="p-4 border-t border-[#2a2a3a]">
+            <button class="w-full bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-semibold py-2 px-4 rounded-lg">Connect Wallet</button>
+        </div>
+    </div>
 
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-    </script>
+    <!-- Main Content -->
+    <div class="ml-64 p-6">
+        <header class="flex items-center gap-2 mb-6">
+            <h1 class="text-2xl font-bold text-white">Whale Tracker</h1>
+            <span class="bg-gradient-to-r from-amber-500 to-yellow-400 text-black text-xs px-2 py-0.5 rounded font-bold">PRO</span>
+        </header>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-4 gap-4 mb-6">
+            <div class="bg-[#1e1e30] rounded-xl p-5 border border-[#2a2a3a]">
+                <div class="text-gray-500 text-sm mb-1">Total P&L</div>
+                <div class="text-2xl font-bold text-white">$4.2M</div>
+                <div class="text-green-400 text-sm mt-1">+12.5% (24h)</div>
+            </div>
+            <div class="bg-[#1e1e30] rounded-xl p-5 border border-[#2a2a3a]">
+                <div class="text-gray-500 text-sm mb-1">Active Whales</div>
+                <div class="text-2xl font-bold text-white">156</div>
+                <div class="text-green-400 text-sm mt-1">+8 new today</div>
+            </div>
+            <div class="bg-[#1e1e30] rounded-xl p-5 border border-[#2a2a3a]">
+                <div class="text-gray-500 text-sm mb-1">Total Volume</div>
+                <div class="text-2xl font-bold text-white">$842M</div>
+                <div class="text-green-400 text-sm mt-1">+5.2% (24h)</div>
+            </div>
+            <div class="bg-[#1e1e30] rounded-xl p-5 border border-[#2a2a3a]">
+                <div class="text-gray-500 text-sm mb-1">Win Rate</div>
+                <div class="text-2xl font-bold text-white">68.5%</div>
+                <div class="text-red-400 text-sm mt-1">-2.1% vs last week</div>
+            </div>
+        </div>
+
+        <!-- Chart Placeholder -->
+        <div class="bg-[#1e1e30] rounded-xl p-5 border border-[#2a2a3a] mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-white">BTC/USDD Price</h2>
+                <div class="flex gap-2">
+                    <button class="px-3 py-1 rounded text-sm bg-gray-700 text-gray-400">1H</button>
+                    <button class="px-3 py-1 rounded text-sm bg-amber-500 text-black font-medium">4H</button>
+                    <button class="px-3 py-1 rounded text-sm bg-gray-700 text-gray-400">1D</button>
+                </div>
+            </div>
+            <div class="h-64 bg-[#2a2a3a] rounded-lg flex items-center justify-center">
+                <div class="text-center">
+                    <div class="text-4xl mb-2">📈</div>
+                    <div class="text-gray-500">Chart would load here</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-[#1e1e30] rounded-xl border border-[#2a2a3a] overflow-hidden">
+            <div class="p-4 border-b border-[#2a2a3a] flex items-center justify-between">
+                <h2 class="text-lg font-semibold text-white">Top Whales</h2>
+                <div class="flex gap-2">
+                    <button class="px-3 py-1.5 rounded-lg text-sm bg-amber-500 text-black">All</button>
+                    <button class="px-3 py-1.5 rounded-lg text-sm bg-[#2a2a40] text-gray-400">Long</button>
+                    <button class="px-3 py-1.5 rounded-lg text-sm bg-[#2a2a40] text-gray-400">Short</button>
+                </div>
+            </div>
+            <table class="w-full">
+                <thead>
+                    <tr class="text-left text-gray-500 text-sm border-b border-[#2a2a3a]">
+                        <th class="p-4 font-medium">#</th>
+                        <th class="p-4 font-medium">Wallet</th>
+                        <th class="p-4 font-medium">Position</th>
+                        <th class="p-4 font-medium">P&L</th>
+                        <th class="p-4 font-medium">P&L %</th>
+                        <th class="p-4 font-medium">Volume (24h)</th>
+                        <th class="p-4 font-medium">Last Active</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-[#2a2a3a] hover:bg-[#252540]">
+                        <td class="p-4 text-gray-400">#1</td>
+                        <td class="p-4"><span class="font-mono text-gray-300 text-sm">0x742d...f5f</span><span class="ml-2 text-xs bg-[#2a2a40] text-amber-400 px-2 py-0.5 rounded">Alpha</span></td>
+                        <td class="p-4"><span class="px-2 py-1 rounded text-xs font-medium bg-green-500/20 text-green-400">LONG</span></td>
+                        <td class="p-4 text-green-400">$1.25M</td>
+                        <td class="p-4 text-green-400">+45.2%</td>
+                        <td class="p-4 text-gray-300">$85M</td>
+                        <td class="p-4 text-gray-400 text-sm">2 min ago</td>
+                    </tr>
+                    <tr class="border-b border-[#2a2a3a] hover:bg-[#252540]">
+                        <td class="p-4 text-gray-400">#2</td>
+                        <td class="p-4"><span class="font-mono text-gray-300 text-sm">0x9B3a...0F</span></td>
+                        <td class="p-4"><span class="px-2 py-1 rounded text-xs font-medium bg-green-500/20 text-green-400">LONG</span></td>
+                        <td class="p-4 text-green-400">$890K</td>
+                        <td class="p-4 text-green-400">+28.5%</td>
+                        <td class="p-4 text-gray-300">$62M</td>
+                        <td class="p-4 text-gray-400 text-sm">5 min ago</td>
+                    </tr>
+                    <tr class="border-b border-[#2a2a3a] hover:bg-[#252540]">
+                        <td class="p-4 text-gray-400">#3</td>
+                        <td class="p-4"><span class="font-mono text-gray-300 text-sm">0x1a2b...6p</span><span class="ml-2 text-xs bg-[#2a2a40] text-amber-400 px-2 py-0.5 rounded">King</span></td>
+                        <td class="p-4"><span class="px-2 py-1 rounded text-xs font-medium bg-red-500/20 text-red-400">SHORT</span></td>
+                        <td class="p-4 text-red-400">-$450K</td>
+                        <td class="p-4 text-red-400">-12.3%</td>
+                        <td class="p-4 text-gray-300">$45M</td>
+                        <td class="p-4 text-gray-400 text-sm">10 min ago</td>
+                    </tr>
+                    <tr class="border-b border-[#2a2a3a] hover:bg-[#252540]">
+                        <td class="p-4 text-gray-400">#4</td>
+                        <td class="p-4"><span class="font-mono text-gray-300 text-sm">0x5e6f...0b</span></td>
+                        <td class="p-4"><span class="px-2 py-1 rounded text-xs font-medium bg-green-500/20 text-green-400">LONG</span></td>
+                        <td class="p-4 text-green-400">$720K</td>
+                        <td class="p-4 text-green-400">+18.7%</td>
+                        <td class="p-4 text-gray-300">$38M</td>
+                        <td class="p-4 text-gray-400 text-sm">15 min ago</td>
+                    </tr>
+                    <tr class="border-b border-[#2a2a3a] hover:bg-[#252540]">
+                        <td class="p-4 text-gray-400">#5</td>
+                        <td class="p-4"><span class="font-mono text-gray-300 text-sm">0x4d3c...9a</span></td>
+                        <td class="p-4"><span class="px-2 py-1 rounded text-xs font-medium bg-green-500/20 text-green-400">LONG</span></td>
+                        <td class="p-4 text-green-400">$560K</td>
+                        <td class="p-4 text-green-400">+15.2%</td>
+                        <td class="p-4 text-gray-300">$32M</td>
+                        <td class="p-4 text-gray-400 text-sm">20 min ago</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer class="mt-8 text-center text-gray-500 text-sm">
+            <p>Data sourced from Hyperliquid • Last updated: just now</p>
+        </footer>
+    </div>
 </body>
 </html>
