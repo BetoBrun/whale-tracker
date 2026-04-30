@@ -20,7 +20,7 @@ export function AccountValueChart({ data, width = 600, height = 300 }: AccountVa
         (chartRef.current as { destroy: () => void }).destroy();
       }
 
-      const chart = createChart(containerRef.current, {
+      const chart = createChart(containerRef.current!, {
         width,
         height,
         layout: {
