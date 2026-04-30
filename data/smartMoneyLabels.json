@@ -1,0 +1,39 @@
+{
+  "catalog": [
+    {
+      "address": "0x1234567890abcdef1234567890abcdef12345678",
+      "label": "Hyperliquid Genesis",
+      "category": "fund",
+      "tags": ["institutional", "early-adopter"]
+    },
+    {
+      "address": "0xabcdef1234567890abcdef1234567890abcdef12",
+      "label": "Wintermute Trading",
+      "category": "market-maker",
+      "tags": ["mm", "institutional"]
+    },
+    {
+      "address": "0x9876543210fedcba9876543210fedcba98765432",
+      "label": "Dialectic",
+      "category": "trader",
+      "tags": ["solo-trader", "prominent"]
+    },
+    {
+      "address": "0xfedcba9876543210fedcba9876543210fedcba98",
+      "label": "Apollo Capital",
+      "category": "fund",
+      "tags": ["systematic", "algorithmic"]
+    },
+    {
+      "address": "0x5678901234abcdef5678901234abcdef56789012",
+      "label": "Validateur DAO",
+      "category": "validator",
+      "tags": ["collective", "network"]
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2026-04-30",
+    "totalWhales": 5
+  }
+}
