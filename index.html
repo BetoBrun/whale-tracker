@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Whale Tracker | Hyperliquid</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -13,162 +12,184 @@
             min-height: 100vh;
             color: #e0e0e0;
         }
+        .sidebar {
+            width: 280px;
+            background: #0f0f1a;
+            border-right: 1px solid #2a2a3a;
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+        .main { margin-left: 280px; padding: 24px; }
+        .stat-card {
+            background: #1e1e30;
+            border: 1px solid #2a2a3a;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .table-row {
+            border-bottom: 1px solid #2a2a3a;
+            transition: background 0.2s;
+        }
+        .table-row:hover { background: #252540; }
+        .btn { padding: 6px 12px; border-radius: 6px; cursor: pointer; border: none; font-size: 14px; }
+        .btn-primary { background: #f59e0b; color: black; }
+        .btn-secondary { background: #2a2a40; color: #888; }
     </style>
 </head>
 <body>
     <!-- Sidebar -->
-    <div class="fixed left-0 top-0 w-64 bg-[#0f0f1a] border-r border-[#2a2a3a] min-h-screen">
-        <div class="p-4 border-b border-[#2a2a3a]">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 flex items-center justify-center">
-                    <span class="text-xl">🐋</span>
-                </div>
+    <div class="sidebar">
+        <div style="padding: 16px; border-bottom: 1px solid #2a2a3a;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(90deg, #f59e0b, #fbbf24); display: flex; align-items: center; justify-content: center; font-size: 20px;">🐋</div>
                 <div>
-                    <div class="font-bold text-white">Whale Tracker</div>
-                    <div class="text-xs text-gray-500">Hyperliquid Analytics</div>
+                    <div style="font-weight: bold; color: white;">Whale Tracker</div>
+                    <div style="font-size: 12px; color: #888;">Hyperliquid Analytics</div>
                 </div>
             </div>
         </div>
-        <nav class="p-4">
-            <div class="text-xs text-gray-500 mb-2 px-2 uppercase tracking-wider">Navigation</div>
-            <ul class="space-y-1">
-                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1e1e30] hover:text-white">📊 Pools</a></li>
-                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1e1e30] hover:text-white">💰 Earn</a></li>
-                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1e1e30] hover:text-white">🎓 Learn</a></li>
-                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1e1e30] hover:text-white">🧮 Lend Simulator</a></li>
-                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1e1e30] hover:text-white">🧮 Liquidity Calc</a></li>
-                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1e1e30] hover:text-white">🏛️ Stake</a></li>
-                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#1e1e30] text-white">🐋 Whale Tracker</a></li>
-                <li><a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:bg-[#1e1e30] hover:text-white">₿ Bitcoin Lab</a></li>
+        <nav style="padding: 16px;">
+            <div style="font-size: 12px; color: #888; margin-bottom: 8px; text-transform: uppercase;">Navigation</div>
+            <ul style="list-style: none;">
+                <li style="margin-bottom: 4px;"><a href="#" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; color: #888; text-decoration: none;">📊 Pools</a></li>
+                <li style="margin-bottom: 4px;"><a href="#" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; color: #888; text-decoration: none;">💰 Earn</a></li>
+                <li style="margin-bottom: 4px;"><a href="#" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; color: #888; text-decoration: none;">🎓 Learn</a></li>
+                <li style="margin-bottom: 4px;"><a href="#" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; color: #888; text-decoration: none;">🧮 Lend Simulator</a></li>
+                <li style="margin-bottom: 4px;"><a href="#" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; color: #888; text-decoration: none;">🧮 Liquidity Calc</a></li>
+                <li style="margin-bottom: 4px;"><a href="#" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; color: #888; text-decoration: none;">🏛️ Stake</a></li>
+                <li style="margin-bottom: 4px;"><a href="#" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; background: #1e1e30; color: white; text-decoration: none;">🐋 Whale Tracker</a></li>
+                <li style="margin-bottom: 4px;"><a href="#" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; color: #888; text-decoration: none;">₿ Bitcoin Lab</a></li>
             </ul>
         </nav>
-        <div class="p-4 border-t border-[#2a2a3a]">
-            <button class="w-full bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-semibold py-2 px-4 rounded-lg">Connect Wallet</button>
+        <div style="padding: 16px; border-top: 1px solid #2a2a3a;">
+            <button style="width: 100%; background: linear-gradient(90deg, #f59e0b, #fbbf24); color: black; font-weight: bold; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer;">Connect Wallet</button>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="ml-64 p-6">
-        <header class="flex items-center gap-2 mb-6">
-            <h1 class="text-2xl font-bold text-white">Whale Tracker</h1>
-            <span class="bg-gradient-to-r from-amber-500 to-yellow-400 text-black text-xs px-2 py-0.5 rounded font-bold">PRO</span>
+    <div class="main">
+        <header style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px;">
+            <h1 style="font-size: 24px; font-weight: bold; color: white;">Whale Tracker</h1>
+            <span style="background: linear-gradient(90deg, #f59e0b, #fbbf24); color: black; font-size: 12px; padding: 2px 8px; border-radius: 4px; font-weight: bold;">PRO</span>
         </header>
 
         <!-- Stats -->
-        <div class="grid grid-cols-4 gap-4 mb-6">
-            <div class="bg-[#1e1e30] rounded-xl p-5 border border-[#2a2a3a]">
-                <div class="text-gray-500 text-sm mb-1">Total P&L</div>
-                <div class="text-2xl font-bold text-white">$4.2M</div>
-                <div class="text-green-400 text-sm mt-1">+12.5% (24h)</div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+            <div class="stat-card">
+                <div style="color: #888; font-size: 14px; margin-bottom: 4px;">Total P&L</div>
+                <div style="font-size: 24px; font-weight: bold; color: white;">$4.2M</div>
+                <div style="color: #4ade80; font-size: 14px; margin-top: 4px;">+12.5% (24h)</div>
             </div>
-            <div class="bg-[#1e1e30] rounded-xl p-5 border border-[#2a2a3a]">
-                <div class="text-gray-500 text-sm mb-1">Active Whales</div>
-                <div class="text-2xl font-bold text-white">156</div>
-                <div class="text-green-400 text-sm mt-1">+8 new today</div>
+            <div class="stat-card">
+                <div style="color: #888; font-size: 14px; margin-bottom: 4px;">Active Whales</div>
+                <div style="font-size: 24px; font-weight: bold; color: white;">156</div>
+                <div style="color: #4ade80; font-size: 14px; margin-top: 4px;">+8 new today</div>
             </div>
-            <div class="bg-[#1e1e30] rounded-xl p-5 border border-[#2a2a3a]">
-                <div class="text-gray-500 text-sm mb-1">Total Volume</div>
-                <div class="text-2xl font-bold text-white">$842M</div>
-                <div class="text-green-400 text-sm mt-1">+5.2% (24h)</div>
+            <div class="stat-card">
+                <div style="color: #888; font-size: 14px; margin-bottom: 4px;">Total Volume</div>
+                <div style="font-size: 24px; font-weight: bold; color: white;">$842M</div>
+                <div style="color: #4ade80; font-size: 14px; margin-top: 4px;">+5.2% (24h)</div>
             </div>
-            <div class="bg-[#1e1e30] rounded-xl p-5 border border-[#2a2a3a]">
-                <div class="text-gray-500 text-sm mb-1">Win Rate</div>
-                <div class="text-2xl font-bold text-white">68.5%</div>
-                <div class="text-red-400 text-sm mt-1">-2.1% vs last week</div>
+            <div class="stat-card">
+                <div style="color: #888; font-size: 14px; margin-bottom: 4px;">Win Rate</div>
+                <div style="font-size: 24px; font-weight: bold; color: white;">68.5%</div>
+                <div style="color: #f87171; font-size: 14px; margin-top: 4px;">-2.1% vs last week</div>
             </div>
         </div>
 
-        <!-- Chart Placeholder -->
-        <div class="bg-[#1e1e30] rounded-xl p-5 border border-[#2a2a3a] mb-6">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-semibold text-white">BTC/USDD Price</h2>
-                <div class="flex gap-2">
-                    <button class="px-3 py-1 rounded text-sm bg-gray-700 text-gray-400">1H</button>
-                    <button class="px-3 py-1 rounded text-sm bg-amber-500 text-black font-medium">4H</button>
-                    <button class="px-3 py-1 rounded text-sm bg-gray-700 text-gray-400">1D</button>
+        <!-- Chart -->
+        <div class="stat-card" style="margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h2 style="font-size: 18px; font-weight: 600; color: white;">BTC/USDD Price</h2>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-secondary">1H</button>
+                    <button class="btn btn-primary">4H</button>
+                    <button class="btn btn-secondary">1D</button>
                 </div>
             </div>
-            <div class="h-64 bg-[#2a2a3a] rounded-lg flex items-center justify-center">
-                <div class="text-center">
-                    <div class="text-4xl mb-2">📈</div>
-                    <div class="text-gray-500">Chart would load here</div>
+            <div style="height: 256px; background: #2a2a3a; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <div style="text-align: center;">
+                    <div style="font-size: 48px; margin-bottom: 8px;">📈</div>
+                    <div style="color: #888;">Chart</div>
                 </div>
             </div>
         </div>
 
         <!-- Table -->
-        <div class="bg-[#1e1e30] rounded-xl border border-[#2a2a3a] overflow-hidden">
-            <div class="p-4 border-b border-[#2a2a3a] flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-white">Top Whales</h2>
-                <div class="flex gap-2">
-                    <button class="px-3 py-1.5 rounded-lg text-sm bg-amber-500 text-black">All</button>
-                    <button class="px-3 py-1.5 rounded-lg text-sm bg-[#2a2a40] text-gray-400">Long</button>
-                    <button class="px-3 py-1.5 rounded-lg text-sm bg-[#2a2a40] text-gray-400">Short</button>
+        <div class="stat-card" style="overflow: hidden;">
+            <div style="padding: 16px; border-bottom: 1px solid #2a2a3a; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="font-size: 18px; font-weight: 600; color: white;">Top Whales</h2>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-primary">All</button>
+                    <button class="btn btn-secondary">Long</button>
+                    <button class="btn btn-secondary">Short</button>
                 </div>
             </div>
-            <table class="w-full">
+            <table style="width: 100%;">
                 <thead>
-                    <tr class="text-left text-gray-500 text-sm border-b border-[#2a2a3a]">
-                        <th class="p-4 font-medium">#</th>
-                        <th class="p-4 font-medium">Wallet</th>
-                        <th class="p-4 font-medium">Position</th>
-                        <th class="p-4 font-medium">P&L</th>
-                        <th class="p-4 font-medium">P&L %</th>
-                        <th class="p-4 font-medium">Volume (24h)</th>
-                        <th class="p-4 font-medium">Last Active</th>
+                    <tr style="text-align: left; color: #888; font-size: 14px; border-bottom: 1px solid #2a2a3a;">
+                        <th style="padding: 16px;">#</th>
+                        <th style="padding: 16px;">Wallet</th>
+                        <th style="padding: 16px;">Position</th>
+                        <th style="padding: 16px;">P&L</th>
+                        <th style="padding: 16px;">P&L %</th>
+                        <th style="padding: 16px;">Volume (24h)</th>
+                        <th style="padding: 16px;">Last Active</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="border-b border-[#2a2a3a] hover:bg-[#252540]">
-                        <td class="p-4 text-gray-400">#1</td>
-                        <td class="p-4"><span class="font-mono text-gray-300 text-sm">0x742d...f5f</span><span class="ml-2 text-xs bg-[#2a2a40] text-amber-400 px-2 py-0.5 rounded">Alpha</span></td>
-                        <td class="p-4"><span class="px-2 py-1 rounded text-xs font-medium bg-green-500/20 text-green-400">LONG</span></td>
-                        <td class="p-4 text-green-400">$1.25M</td>
-                        <td class="p-4 text-green-400">+45.2%</td>
-                        <td class="p-4 text-gray-300">$85M</td>
-                        <td class="p-4 text-gray-400 text-sm">2 min ago</td>
+                    <tr class="table-row">
+                        <td style="padding: 16px; color: #888;">#1</td>
+                        <td style="padding: 16px;"><span style="font-family: monospace; color: #d1d5db;">0x742d...f5f</span><span style="margin-left: 8px; font-size: 12px; background: #2a2a40; color: #fbbf24; padding: 2px 8px; border-radius: 4px;">Alpha</span></td>
+                        <td style="padding: 16px;"><span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background: rgba(74, 222, 128, 0.2); color: #4ade80;">LONG</span></td>
+                        <td style="padding: 16px; color: #4ade80;">$1.25M</td>
+                        <td style="padding: 16px; color: #4ade80;">+45.2%</td>
+                        <td style="padding: 16px; color: #d1d5db;">$85M</td>
+                        <td style="padding: 16px; color: #888; font-size: 14px;">2 min ago</td>
                     </tr>
-                    <tr class="border-b border-[#2a2a3a] hover:bg-[#252540]">
-                        <td class="p-4 text-gray-400">#2</td>
-                        <td class="p-4"><span class="font-mono text-gray-300 text-sm">0x9B3a...0F</span></td>
-                        <td class="p-4"><span class="px-2 py-1 rounded text-xs font-medium bg-green-500/20 text-green-400">LONG</span></td>
-                        <td class="p-4 text-green-400">$890K</td>
-                        <td class="p-4 text-green-400">+28.5%</td>
-                        <td class="p-4 text-gray-300">$62M</td>
-                        <td class="p-4 text-gray-400 text-sm">5 min ago</td>
+                    <tr class="table-row">
+                        <td style="padding: 16px; color: #888;">#2</td>
+                        <td style="padding: 16px;"><span style="font-family: monospace; color: #d1d5db;">0x9B3a...0F</span></td>
+                        <td style="padding: 16px;"><span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background: rgba(74, 222, 128, 0.2); color: #4ade80;">LONG</span></td>
+                        <td style="padding: 16px; color: #4ade80;">$890K</td>
+                        <td style="padding: 16px; color: #4ade80;">+28.5%</td>
+                        <td style="padding: 16px; color: #d1d5db;">$62M</td>
+                        <td style="padding: 16px; color: #888; font-size: 14px;">5 min ago</td>
                     </tr>
-                    <tr class="border-b border-[#2a2a3a] hover:bg-[#252540]">
-                        <td class="p-4 text-gray-400">#3</td>
-                        <td class="p-4"><span class="font-mono text-gray-300 text-sm">0x1a2b...6p</span><span class="ml-2 text-xs bg-[#2a2a40] text-amber-400 px-2 py-0.5 rounded">King</span></td>
-                        <td class="p-4"><span class="px-2 py-1 rounded text-xs font-medium bg-red-500/20 text-red-400">SHORT</span></td>
-                        <td class="p-4 text-red-400">-$450K</td>
-                        <td class="p-4 text-red-400">-12.3%</td>
-                        <td class="p-4 text-gray-300">$45M</td>
-                        <td class="p-4 text-gray-400 text-sm">10 min ago</td>
+                    <tr class="table-row">
+                        <td style="padding: 16px; color: #888;">#3</td>
+                        <td style="padding: 16px;"><span style="font-family: monospace; color: #d1d5db;">0x1a2b...6p</span><span style="margin-left: 8px; font-size: 12px; background: #2a2a40; color: #fbbf24; padding: 2px 8px; border-radius: 4px;">King</span></td>
+                        <td style="padding: 16px;"><span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background: rgba(248, 113, 113, 0.2); color: #f87171;">SHORT</span></td>
+                        <td style="padding: 16px; color: #f87171;">-$450K</td>
+                        <td style="padding: 16px; color: #f87171;">-12.3%</td>
+                        <td style="padding: 16px; color: #d1d5db;">$45M</td>
+                        <td style="padding: 16px; color: #888; font-size: 14px;">10 min ago</td>
                     </tr>
-                    <tr class="border-b border-[#2a2a3a] hover:bg-[#252540]">
-                        <td class="p-4 text-gray-400">#4</td>
-                        <td class="p-4"><span class="font-mono text-gray-300 text-sm">0x5e6f...0b</span></td>
-                        <td class="p-4"><span class="px-2 py-1 rounded text-xs font-medium bg-green-500/20 text-green-400">LONG</span></td>
-                        <td class="p-4 text-green-400">$720K</td>
-                        <td class="p-4 text-green-400">+18.7%</td>
-                        <td class="p-4 text-gray-300">$38M</td>
-                        <td class="p-4 text-gray-400 text-sm">15 min ago</td>
+                    <tr class="table-row">
+                        <td style="padding: 16px; color: #888;">#4</td>
+                        <td style="padding: 16px;"><span style="font-family: monospace; color: #d1d5db;">0x5e6f...0b</span></td>
+                        <td style="padding: 16px;"><span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background: rgba(74, 222, 128, 0.2); color: #4ade80;">LONG</span></td>
+                        <td style="padding: 16px; color: #4ade80;">$720K</td>
+                        <td style="padding: 16px; color: #4ade80;">+18.7%</td>
+                        <td style="padding: 16px; color: #d1d5db;">$38M</td>
+                        <td style="padding: 16px; color: #888; font-size: 14px;">15 min ago</td>
                     </tr>
-                    <tr class="border-b border-[#2a2a3a] hover:bg-[#252540]">
-                        <td class="p-4 text-gray-400">#5</td>
-                        <td class="p-4"><span class="font-mono text-gray-300 text-sm">0x4d3c...9a</span></td>
-                        <td class="p-4"><span class="px-2 py-1 rounded text-xs font-medium bg-green-500/20 text-green-400">LONG</span></td>
-                        <td class="p-4 text-green-400">$560K</td>
-                        <td class="p-4 text-green-400">+15.2%</td>
-                        <td class="p-4 text-gray-300">$32M</td>
-                        <td class="p-4 text-gray-400 text-sm">20 min ago</td>
+                    <tr class="table-row">
+                        <td style="padding: 16px; color: #888;">#5</td>
+                        <td style="padding: 16px;"><span style="font-family: monospace; color: #d1d5db;">0x4d3c...9a</span></td>
+                        <td style="padding: 16px;"><span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background: rgba(74, 222, 128, 0.2); color: #4ade80;">LONG</span></td>
+                        <td style="padding: 16px; color: #4ade80;">$560K</td>
+                        <td style="padding: 16px; color: #4ade80;">+15.2%</td>
+                        <td style="padding: 16px; color: #d1d5db;">$32M</td>
+                        <td style="padding: 16px; color: #888; font-size: 14px;">20 min ago</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <footer class="mt-8 text-center text-gray-500 text-sm">
+        <footer style="margin-top: 32px; text-align: center; color: #888; font-size: 14px;">
             <p>Data sourced from Hyperliquid • Last updated: just now</p>
         </footer>
     </div>
