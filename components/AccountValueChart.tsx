@@ -47,7 +47,7 @@ export function AccountValueChart({ data, width = 600, height = 300 }: AccountVa
 
       areaSeries.setData(
         data.map((d) => ({
-          time: d.time as unknown as number,
+          time: Math.floor(d.time / 1000) as import('lightweight-charts').Time,
           value: d.value,
         }))
       );
